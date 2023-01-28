@@ -2,11 +2,18 @@ const Score = require("../Model/quiz.model");
 const Question = require("../Model/question.model");
 
 const quiz = async (req, res) => {
-  const { name, score } = req.body;
-  const data = await Score.create({
-    name,
-    score,
-  });
+  try {
+    const { name, score } = req.body;
+    console.log(name, score);
+    const data = await Score.create({
+      name,
+      score,
+    });
+    res.send("SUCCESS");
+  } catch (error) {
+    console.log(error);
+    res.send("Error");
+  }
 };
 const getScore = async (req, res) => {
   const data = await Score.find().sort({ score: -1 });
