@@ -2,18 +2,27 @@ const Score = require("../Model/quiz.model");
 const Question = require("../Model/question.model");
 
 const quiz = async (req, res) => {
-  const { name, level } = req.body;
+  const { name, score } = req.body;
+  const data = await Score.create({
+    name,
+    score,
+  });
+};
+const getScore = async (req, res) => {
+  const data = await Score.find().sort({ score: -1 });
+  res.send(data);
 };
 const getData = async (req, res) => {
-  const { category, difficulty, amount } = req.query;
+  let { category, difficulty, amount } = req.query;
+  if (category === "1") category = "General Knowledge";
+  else if (category === "2") category = "Sports";
+  else category = "Geography";
+  console.log(category, difficulty, amount);
   try {
-    if (category === "1") category = "General Knowledge";
-    else if (category === "2") category = "";
-    console.log(category, difficulty, amount);
-    const data = await Question.find().limit(amount);
+    const data = await Question.find({ category, difficulty }).limit(amount);
     res.send(data);
   } catch (error) {
     res.send(error);
   }
 };
-module.exports = { quiz, getData };
+module.exports = { quiz, getData, getScore };
